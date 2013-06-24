@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>socketio redis store</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io.connect('http://<%=host%>');
+        socket.on('users', function (data) {
+            console.log(data);
+        });
+    </script>
+</head>
+<body>
+    socketio redis store...
+</body>
+</html>

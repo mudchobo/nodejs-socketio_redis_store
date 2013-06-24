@@ -1,0 +1,7 @@
+{
+    "name": "socketio_redis_store",
+    "version": "1.0.0",
+    "dependencies": {
+        "socket.io": "0.9.16"
+    }
+}
