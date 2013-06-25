@@ -39,14 +39,6 @@ io.configure(function(){
 });
 
 io.sockets.on('connection', function (socket) {
-    var clients = io.sockets.clients();
-    console.log(clients);
-    var ids = [];
-    for (var i = 0; i < clients.length; i++){
-        ids.push(clients[i].id);
-    }
-    socket.broadcast.emit('users', {clients: ids});
-    
     socket.on('message', function(data){
         socket.broadcast.emit('message', data);
     });
