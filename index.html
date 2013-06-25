@@ -1,16 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>socketio redis store</title>
-    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script>
         var socket = io.connect('http://<%=host%>');
-        socket.on('users', function (data) {
-            console.log(data);
+        
+        $(document).ready(function(){
+            socket.on('users', function (data) {
+                console.log(data);
+            });
+            socket.on('message', function(data){
+                $('#chat').append('<li>' + data.message + '</li>');
+            });
+            
+            $('#btnSend').click(function(){
+                send();
+            });
+            $('#inputText').keyup(function(e){
+                if (e.keyCode == 13){
+                    send();
+                }
+            });
         });
+        function send(){
+            var message = $('#inputText').val();
+            if (message.length < 1){
+                return;
+            }
+            socket.emit('message', {message:message});
+            $('#chat').append('<li>' + message + '</li>');
+            $('#inputText').val('');
+        }
     </script>
 </head>
 <body>
-    socketio redis store...
+    socketio redis store...<br />
+    <input type="text" id="inputText" />
+    <button id="btnSend">보내기</button>
+    <ul id="chat">
+    </ul>
 </body>
 </html>

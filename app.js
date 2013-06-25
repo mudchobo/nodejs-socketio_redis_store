@@ -1,13 +1,21 @@
+var redisInfo = {
+    host: '192.168.56.1',
+    port: 6379
+};
 var app = require('http').createServer(handler),
     io = require('socket.io').listen(app),
     fs = require('fs'),
     RedisStore = require('socket.io/lib/stores/redis'),
     redis = require('socket.io/node_modules/redis'),
-    pub = redis.createClient(6379, '172.16.171.136'),
-    sub = redis.createClient(6379, '172.16.171.136'),
-    client = redis.createClient(6379, '172.16.171.136');
+    pub = redis.createClient(redisInfo.port, redisInfo.host),
+    sub = redis.createClient(redisInfo.port, redisInfo.host),
+    client = redis.createClient(redisInfo.port, redisInfo.host);
 
-app.listen(9000);
+if (process.argv.length < 3){
+    console.log('ex) node app <port>');
+    process.exit(1);
+}
+app.listen(process.argv[2]);
 
 function handler(req, res) {
     fs.readFile(__dirname + '/index.html',
@@ -37,5 +45,9 @@ io.sockets.on('connection', function (socket) {
     for (var i = 0; i < clients.length; i++){
         ids.push(clients[i].id);
     }
-    socket.emit('users', { clients: ids });
+    socket.broadcast.emit('users', {clients: ids});
+    
+    socket.on('message', function(data){
+        socket.broadcast.emit('message', data);
+    });
 });
